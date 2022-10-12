@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
+import { ProductService } from './products.service';
+import { ProductsController } from './products.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -13,13 +12,12 @@ import { ProductsModule } from './products/products.module';
         transport: Transport.GRPC,
         options: {
           package: 'crud',
-          protoPath: join(__dirname, './crud.proto'),
+          protoPath: join(__dirname, '../crud.proto'),
         },
       },
     ]),
-    ProductsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [ProductsController],
+  providers: [ProductService],
 })
-export class AppModule {}
+export class ProductsModule {}

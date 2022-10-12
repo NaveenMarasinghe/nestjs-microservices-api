@@ -3,20 +3,20 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 interface UsersService {
-  findOne(data: { id: number }): Observable<any>;
+  findOneUser(data: { id: number }): Observable<any>;
 }
 
 @Injectable()
 export class AppService implements OnModuleInit {
   private usersService: UsersService;
 
-  constructor(@Inject('USER_PACKAGE') private client: ClientGrpc) {}
+  constructor(@Inject('CRUD_PACKAGE') private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.usersService = this.client.getService<UsersService>('UsersService');
+    this.usersService = this.client.getService<UsersService>('CrudService');
   }
 
   getUser(): Observable<string> {
-    return this.usersService.findOne({ id: 1 });
+    return this.usersService.findOneUser({ id: 1 });
   }
 }

@@ -23,7 +23,7 @@ export class UsersController {
   //   return this.usersService.findAll();
   // }
 
-  @GrpcMethod('UsersService', 'FindOne')
+  @GrpcMethod('CrudService', 'FindOneUser')
   findOne(data: UserById, metadata: Metadata, call: ServerUnaryCall<any, any>) {
     //return { id: 1, name: 'john' };
     return this.usersService.findOne(data.id);
