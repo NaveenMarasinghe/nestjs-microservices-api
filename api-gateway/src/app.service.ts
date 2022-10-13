@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 interface UsersService {
   findOneUser(data: { id: number }): Observable<any>;
+  findOneProduct(data: { id: number }): Observable<any>;
 }
 
 @Injectable()

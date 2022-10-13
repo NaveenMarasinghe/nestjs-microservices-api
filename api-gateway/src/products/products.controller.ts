@@ -11,6 +11,7 @@ import { ProductService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Observable } from 'rxjs';
+import { IProduct } from './dto/IProduct';
 
 @Controller('products')
 export class ProductsController {
@@ -21,9 +22,14 @@ export class ProductsController {
   //   return this.productsService.create(createProductDto);
   // }
 
-  @Get()
-  call(): Observable<any> {
-    return this.productsService.getProduct();
+  @Get(':id')
+  getProduct(@Param() params: any): Observable<any> {
+    return this.productsService.getProduct(params.id);
+  }
+
+  @Post()
+  addProduct(): Observable<any> {
+    return this.productsService.addProduct();
   }
 
   // @Get(':id')

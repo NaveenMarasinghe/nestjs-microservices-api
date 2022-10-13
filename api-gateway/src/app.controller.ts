@@ -7,7 +7,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('users')
-  call(): Observable<any> {
+  getUser(): Observable<any> {
     return this.appService.getUser();
   }
 }
