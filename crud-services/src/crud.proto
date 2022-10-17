@@ -5,7 +5,9 @@ package crud;
 service CrudService {
   rpc FindOneUser (ById) returns (User) {}
   rpc FindOneProduct (ProductById) returns (Product) {}
-  rpc AddNewProduct (ProductById) returns (Product) {}
+  rpc AddNewProduct (Product) returns (Product) {}
+  rpc UpdateProduct (UpdateProduct) returns (Product) {}
+  rpc DeleteProduct (ProductById) returns (StringResponse) {}
 }
 
 message ById {
@@ -24,8 +26,17 @@ message User {
 message Product {
   string tenantId = 1;
   string title = 2;
-  string price = 3;
+  float price = 3;
   string description = 4;
   string category = 5;
   string image = 6;
+}
+
+message UpdateProduct {
+  Product product = 1;
+  int32 id = 2;
+}
+
+message StringResponse {
+  string response = 1;
 }
