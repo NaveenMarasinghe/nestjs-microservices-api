@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -21,6 +22,9 @@ export class ProductsService {
     const product = await this.productsRepository.findOne({
       where: { id: id },
     });
+    if (!product) {
+      throw new RpcException('Product not found');
+    }
     return product;
   }
 

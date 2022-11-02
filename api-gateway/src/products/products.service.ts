@@ -4,10 +4,16 @@ import { Observable } from 'rxjs';
 import { CreateProductDto } from './dto/create-product.dto';
 
 interface ProductsService {
-  findOneProduct(data: { id: number }): Observable<any>;
-  addNewProduct(data: { newProduct: CreateProductDto }): Observable<any>;
-  updateProduct(data: { updateProduct: CreateProductDto }): Observable<any>;
-  deleteProduct(data: { id: number }): Observable<any>;
+  findOneProduct(data: { id: number; token: string }): Observable<any>;
+  addNewProduct(data: {
+    newProduct: CreateProductDto;
+    token: string;
+  }): Observable<any>;
+  updateProduct(data: {
+    updateProduct: CreateProductDto;
+    token: string;
+  }): Observable<any>;
+  deleteProduct(data: { id: number; token: string }): Observable<any>;
 }
 
 @Injectable()
@@ -21,19 +27,22 @@ export class ProductService implements OnModuleInit {
       this.client.getService<ProductsService>('CrudService');
   }
 
-  findOneProduct(id): Observable<string> {
-    return this.productsService.findOneProduct({ id: id });
+  findOneProduct(id, jwt: string): Observable<string> {
+    return this.productsService.findOneProduct({ id: id, token: jwt });
   }
 
-  addNewProduct(data: CreateProductDto): Observable<string> {
-    return this.productsService.addNewProduct({ newProduct: data });
+  addNewProduct(data: CreateProductDto, jwt: string): Observable<string> {
+    return this.productsService.addNewProduct({ newProduct: data, token: jwt });
   }
 
-  updateProduct(data: CreateProductDto): Observable<string> {
-    return this.productsService.updateProduct({ updateProduct: data });
+  updateProduct(data: CreateProductDto, jwt: string): Observable<string> {
+    return this.productsService.updateProduct({
+      updateProduct: data,
+      token: jwt,
+    });
   }
 
-  deleteProduct(id: number): Observable<string> {
-    return this.productsService.deleteProduct({ id: id });
+  deleteProduct(id: number, jwt: string): Observable<string> {
+    return this.productsService.deleteProduct({ id: id, token: jwt });
   }
 }

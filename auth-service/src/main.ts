@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -9,8 +9,9 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: 'crud',
-        protoPath: join(__dirname, './crud.proto'),
+        url: 'localhost:3001',
+        package: 'auth',
+        protoPath: join(__dirname, './auth.proto'),
       },
     },
   );
