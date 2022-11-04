@@ -24,7 +24,7 @@ export class ProductsController {
     return this.productsService.findOne(data.id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @GrpcMethod('CrudService', 'AddNewProduct')
   addNewProduct(
     data: IProduct,
@@ -34,7 +34,7 @@ export class ProductsController {
     return this.productsService.addNewProduct(data);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @GrpcMethod('CrudService', 'UpdateProduct')
   updateProduct(
     data: any,
@@ -44,7 +44,7 @@ export class ProductsController {
     return this.productsService.updateProduct(data.product, data.id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @GrpcMethod('CrudService', 'DeleteProduct')
   deleteProduct(
     data: ProductById,

@@ -3,38 +3,45 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Put,
   ParseIntPipe,
-  Headers,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ViewUserDto } from './dto/view-user.dto';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get(':id')
-  getOneUser(@Param('id', ParseIntPipe) id: number, @Headers() header) {
-    return this.usersService.getOneUser(id, header.jwt);
+  @ApiParam({ name: 'id' })
+  getOneUser(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.getOneUser(id);
   }
 
   @Post()
-  addNewUser(@Body() newUser: CreateUserDto, @Headers() header) {
-    return this.usersService.addNewUser(newUser, header.jwt);
+  @ApiBody({ type: CreateUserDto })
+  @ApiBearerAuth('JWT-auth')
+  addNewUser(@Body() newUser: CreateUserDto) {
+    return this.usersService.addNewUser(newUser);
   }
 
   @Put(':id')
-  updateUser(@Body() newUser: CreateUserDto, @Headers() header) {
-    return this.usersService.updateUser(newUser, header.jwt);
+  @ApiParam({ name: 'id' })
+  @ApiBearerAuth('JWT-auth')
+  updateUser(@Body() updatedUser: ViewUserDto) {
+    return this.usersService.updateUser(updatedUser);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id', ParseIntPipe) id: number, @Headers() header) {
-    return this.usersService.deleteUser(id, header.jwt);
+  @ApiParam({ name: 'id' })
+  @ApiBearerAuth('JWT-auth')
+  deleteUser(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.deleteUser(id);
   }
 }

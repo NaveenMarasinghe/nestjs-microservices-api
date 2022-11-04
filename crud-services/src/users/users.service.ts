@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
 import { IUser } from './dto/IUser';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -15,11 +14,13 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     return await this.usersRepository.find();
   }
-  async findOneUser(id: number, token: string): Promise<User> {
-    console.log('token', token);
+  async findOneUser(id: number): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: { id: id },
     });
+    if (!user) {
+      throw new RpcException('User not found');
+    }
     return user;
   }
   async addNewUser(data: IUser): Promise<User> {
@@ -30,7 +31,8 @@ export class UsersService {
 
     return await this.usersRepository.save(user);
   }
-  async updateUser(data: User, id: number): Promise<User> {
+  async updateUser(data: User): Promise<User> {
+    console.log(data);
     const result = await this.usersRepository
       .createQueryBuilder()
       .update({
@@ -39,7 +41,7 @@ export class UsersService {
         name: data.name,
       })
       .where({
-        id: id,
+        id: data.id,
       })
       .returning('*')
       .execute();
@@ -47,8 +49,8 @@ export class UsersService {
     return await result.raw[0];
   }
 
-  async deleteUser(data: number) {
-    await this.usersRepository.delete({ id: data });
+  async deleteUser(id: number) {
+    await this.usersRepository.delete({ id: id });
     return { response: 'Success' };
   }
 }

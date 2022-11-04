@@ -1,10 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateProductDto } from './dto/create-product.dto';
 import { IProduct } from './dto/IProduct';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { IProductView } from './dto/IProductView';
 import { Product } from './entities/product.entity';
 
 @Injectable()
@@ -28,26 +27,29 @@ export class ProductsService {
     return product;
   }
 
-  async addNewProduct(data: IProduct): Promise<string> {
+  async addNewProduct(data: IProduct): Promise<IProductView> {
     const product = new Product();
     product.title = data.title;
-    product.tenantId = data.tenantId;
     product.description = data.description;
     product.category = data.category;
     product.image = data.image;
     product.price = data.price;
 
-    await this.productsRepository.save(product);
-    return 'Success';
+    const res = await this.productsRepository.save(product);
+
+    if (!res) {
+      throw new RpcException('Product not found');
+    }
+
+    return res;
   }
 
-  async updateProduct(data: IProduct, id: number): Promise<Product> {
+  async updateProduct(data: IProduct, id: number): Promise<IProductView> {
     await this.productsRepository
       .createQueryBuilder()
       .update(Product)
       .set({
         title: data.title,
-        tenantId: data.tenantId,
         description: data.description,
         category: data.category,
         image: data.image,

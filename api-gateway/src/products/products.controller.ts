@@ -3,37 +3,51 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Put,
   ParseIntPipe,
-  Headers,
 } from '@nestjs/common';
 import { ProductService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Observable } from 'rxjs';
+import { ViewProductDto } from './dto/view-product.dto';
 
 @Controller('products')
+@ApiTags('Products')
 export class ProductsController {
   constructor(private readonly productService: ProductService) {}
 
   @Get(':id')
-  getOneUser(@Param('id', ParseIntPipe) id: number, @Headers() header) {
-    return this.productService.findOneProduct(id, header.jwt);
+  @ApiParam({ name: 'id' })
+  getOneUser(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<ViewProductDto> {
+    return this.productService.findOneProduct(id);
   }
 
   @Post()
-  addNewUser(@Body() createUserDto: CreateProductDto, @Headers() header) {
-    return this.productService.addNewProduct(createUserDto, header.jwt);
+  @ApiBody({ type: CreateProductDto })
+  @ApiBearerAuth('JWT-auth')
+  addNewUser(@Body() createUser: CreateProductDto): Observable<ViewProductDto> {
+    return this.productService.addNewProduct(createUser);
   }
 
   @Put(':id')
-  updateUser(@Body() createUserDto: CreateProductDto, @Headers() header) {
-    return this.productService.updateProduct(createUserDto, header.jwt);
+  @ApiParam({ name: 'id' })
+  @ApiBearerAuth('JWT-auth')
+  updateUser(
+    @Body() createUserDto: CreateProductDto,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.productService.updateProduct(createUserDto, id);
   }
 
   @Delete(':id')
-  deleteUser(@Param('id', ParseIntPipe) id: number, @Headers() header) {
-    return this.productService.deleteProduct(id, header.jwt);
+  @ApiParam({ name: 'id' })
+  @ApiBearerAuth('JWT-auth')
+  deleteUser(@Param('id', ParseIntPipe) id: number) {
+    return this.productService.deleteProduct(id);
   }
 }

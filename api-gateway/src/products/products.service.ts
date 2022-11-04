@@ -2,18 +2,16 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { CreateProductDto } from './dto/create-product.dto';
+import { ViewProductDto } from './dto/view-product.dto';
 
 interface ProductsService {
-  findOneProduct(data: { id: number; token: string }): Observable<any>;
-  addNewProduct(data: {
-    newProduct: CreateProductDto;
-    token: string;
-  }): Observable<any>;
+  findOneProduct(data: { id: number }): Observable<ViewProductDto>;
+  addNewProduct(data: CreateProductDto): Observable<ViewProductDto>;
   updateProduct(data: {
-    updateProduct: CreateProductDto;
-    token: string;
-  }): Observable<any>;
-  deleteProduct(data: { id: number; token: string }): Observable<any>;
+    product: CreateProductDto;
+    id: number;
+  }): Observable<ViewProductDto>;
+  deleteProduct(data: { id: number }): Observable<any>;
 }
 
 @Injectable()
@@ -27,22 +25,31 @@ export class ProductService implements OnModuleInit {
       this.client.getService<ProductsService>('CrudService');
   }
 
-  findOneProduct(id, jwt: string): Observable<string> {
-    return this.productsService.findOneProduct({ id: id, token: jwt });
+  findOneProduct(id: number): Observable<ViewProductDto> {
+    return this.productsService.findOneProduct({ id: id });
   }
 
-  addNewProduct(data: CreateProductDto, jwt: string): Observable<string> {
-    return this.productsService.addNewProduct({ newProduct: data, token: jwt });
-  }
-
-  updateProduct(data: CreateProductDto, jwt: string): Observable<string> {
-    return this.productsService.updateProduct({
-      updateProduct: data,
-      token: jwt,
+  addNewProduct(data: CreateProductDto): Observable<ViewProductDto> {
+    return this.productsService.addNewProduct({
+      title: data.title,
+      price: data.price,
+      description: data.description,
+      category: data.category,
+      image: data.image,
     });
   }
 
-  deleteProduct(id: number, jwt: string): Observable<string> {
-    return this.productsService.deleteProduct({ id: id, token: jwt });
+  updateProduct(
+    data: CreateProductDto,
+    id: number,
+  ): Observable<ViewProductDto> {
+    return this.productsService.updateProduct({
+      product: data,
+      id: id,
+    });
+  }
+
+  deleteProduct(id: number): Observable<string> {
+    return this.productsService.deleteProduct({ id: id });
   }
 }

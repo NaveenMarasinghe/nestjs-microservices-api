@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateProductDto {
+export class ViewProductDto {
+  @ApiProperty()
+  id: number;
+
   @ApiProperty()
   title: string;
 
