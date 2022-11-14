@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { IUser } from './dto/IUser';
+import { IUser } from './interfaces/IUser';
 import { User } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -23,7 +25,7 @@ export class UsersService {
     }
     return user;
   }
-  async addNewUser(data: IUser): Promise<User> {
+  async addNewUser(data: CreateUserDto): Promise<IUser> {
     const user = new User();
     user.email = data.email;
     user.name = data.name;
@@ -31,7 +33,7 @@ export class UsersService {
 
     return await this.usersRepository.save(user);
   }
-  async updateUser(data: User): Promise<User> {
+  async updateUser(data: UpdateUserDto): Promise<IUser> {
     console.log(data);
     const result = await this.usersRepository
       .createQueryBuilder()

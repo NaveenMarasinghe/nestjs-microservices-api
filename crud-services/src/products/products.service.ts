@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { IProduct } from './dto/IProduct';
-import { IProductView } from './dto/IProductView';
 import { Product } from './entities/product.entity';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { IProduct } from './interfaces/IProduct';
 
 @Injectable()
 export class ProductsService {
@@ -27,7 +28,7 @@ export class ProductsService {
     return product;
   }
 
-  async addNewProduct(data: IProduct): Promise<IProductView> {
+  async addNewProduct(data: CreateProductDto): Promise<IProduct> {
     const product = new Product();
     product.title = data.title;
     product.description = data.description;
@@ -44,24 +45,24 @@ export class ProductsService {
     return res;
   }
 
-  async updateProduct(data: IProduct, id: number): Promise<IProductView> {
+  async updateProduct(data: UpdateProductDto): Promise<IProduct> {
     await this.productsRepository
       .createQueryBuilder()
       .update(Product)
       .set({
-        title: data.title,
-        description: data.description,
-        category: data.category,
-        image: data.image,
-        price: data.price,
+        title: data.product.title,
+        description: data.product.description,
+        category: data.product.category,
+        image: data.product.image,
+        price: data.product.price,
       })
       .where({
-        id: id,
+        id: data.id,
       })
       .returning('*')
       .execute();
 
-    return await this.findOne(id);
+    return await this.findOne(data.id);
   }
 
   async deleteProduct(data: number) {

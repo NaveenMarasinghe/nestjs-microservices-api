@@ -2,6 +2,7 @@ import { Controller, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 import { UsersService } from './users.service';
+import { IUser } from './interfaces/IUser';
 
 export type UserById = {
   id: number;
@@ -22,13 +23,21 @@ export class UsersController {
 
   //@UseGuards(JwtAuthGuard)
   @GrpcMethod('CrudService', 'AddNewUser')
-  addNewUser(data: any, metadata: Metadata, call: ServerUnaryCall<any, any>) {
+  addNewUser(
+    data: any,
+    metadata: Metadata,
+    call: ServerUnaryCall<any, any>,
+  ): Promise<IUser> {
     return this.usersService.addNewUser(data.newUser);
   }
 
   //@UseGuards(JwtAuthGuard)
   @GrpcMethod('CrudService', 'UpdateUser')
-  updateUser(data: any, metadata: Metadata, call: ServerUnaryCall<any, any>) {
+  updateUser(
+    data: any,
+    metadata: Metadata,
+    call: ServerUnaryCall<any, any>,
+  ): Promise<IUser> {
     return this.usersService.updateUser(data);
   }
 

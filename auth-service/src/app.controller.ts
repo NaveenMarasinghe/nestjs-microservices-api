@@ -29,11 +29,7 @@ export class AppController {
 
   @UseGuards(CustomLocalAuthGuard)
   @GrpcMethod('AuthService', 'LoginUser')
-  async login(
-    data: AuthData,
-    metadata: Metadata,
-    call: ServerUnaryCall<any, any>,
-  ) {
+  async login(data: AuthData) {
     return this.authService.login(data.email);
   }
 

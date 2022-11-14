@@ -29,24 +29,23 @@ export class ProductsController {
 
   @Post()
   @ApiBody({ type: CreateProductDto })
-  @ApiBearerAuth('JWT-auth')
-  addNewUser(@Body() createUser: CreateProductDto): Observable<ViewProductDto> {
-    return this.productService.addNewProduct(createUser);
+  addNewUser(
+    @Body() createProduct: CreateProductDto,
+  ): Observable<ViewProductDto> {
+    return this.productService.addNewProduct(createProduct);
   }
 
   @Put(':id')
   @ApiParam({ name: 'id' })
-  @ApiBearerAuth('JWT-auth')
   updateUser(
-    @Body() createUserDto: CreateProductDto,
+    @Body() createProductDto: CreateProductDto,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.productService.updateProduct(createUserDto, id);
+    return this.productService.updateProduct(createProductDto, id);
   }
 
   @Delete(':id')
   @ApiParam({ name: 'id' })
-  @ApiBearerAuth('JWT-auth')
   deleteUser(@Param('id', ParseIntPipe) id: number) {
     return this.productService.deleteProduct(id);
   }
