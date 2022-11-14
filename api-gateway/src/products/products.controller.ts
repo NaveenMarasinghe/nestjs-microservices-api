@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ProductService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { ViewProductDto } from './dto/view-product.dto';
 
